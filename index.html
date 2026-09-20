@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Compare JSON API fixtures locally, match records by ID, and export a clear change review."
+    />
+    <meta name="theme-color" content="#142b2b" />
+    <title>Payload Ledger — JSON fixture review</title>
+  </head>
+  <body>
+    <a class="skip" href="#workspace">Skip to comparison</a>
+    <header>
+      <a class="brand" href="./" aria-label="Payload Ledger home"
+        ><span class="mark" aria-hidden="true">{↔}</span> Payload Ledger</a
+      ><span class="privacy"
+        ><span aria-hidden="true">●</span> Runs in your browser</span
+      >
+    </header>
+    <main>
+      <section class="intro">
+        <div>
+          <p class="eyebrow">THE API FIXTURE WORKBENCH</p>
+          <h1>See the change.<br /><span>Skip the noise.</span></h1>
+          <p class="lede">
+            Review two JSON responses with clear field changes, record matching,
+            and explicit exclusions.
+          </p>
+        </div>
+        <aside class="intro-note">
+          <strong>Small fixtures. Clear decisions.</strong>
+          <p>
+            No account. No app uploads. Compare in memory and download a review
+            when you’re ready.
+          </p>
+          <span>01 / LOAD &nbsp; 02 / COMPARE &nbsp; 03 / REVIEW</span>
+        </aside>
+      </section>
+      <section id="workspace" aria-labelledby="workspace-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">01 / INPUTS</p>
+            <h2 id="workspace-title">A before. An after.</h2>
+          </div>
+          <div class="actions">
+            <button id="sample" type="button">Load synthetic example</button
+            ><button id="clear" type="button" class="quiet">
+              Clear workspace
+            </button>
+          </div>
+        </div>
+        <div class="editors">
+          <div class="editor">
+            <div class="editor-top">
+              <label for="baseline">Baseline JSON</label
+              ><label class="file-label"
+                >Open JSON<input
+                  id="baseline-file"
+                  type="file"
+                  accept=".json,application/json"
+                  aria-label="Open baseline JSON file"
+              /></label>
+            </div>
+            <textarea
+              id="baseline"
+              spellcheck="false"
+              placeholder='{"records": []}'
+              aria-describedby="input-help"
+            ></textarea>
+          </div>
+          <div class="editor">
+            <div class="editor-top">
+              <label for="candidate">Candidate JSON</label
+              ><label class="file-label"
+                >Open JSON<input
+                  id="candidate-file"
+                  type="file"
+                  accept=".json,application/json"
+                  aria-label="Open candidate JSON file"
+              /></label>
+            </div>
+            <textarea
+              id="candidate"
+              spellcheck="false"
+              placeholder='{"records": []}'
+              aria-describedby="input-help"
+            ></textarea>
+          </div>
+        </div>
+        <p id="input-help" class="hint">
+          256 KiB per input · strict JSON · synthetic example only · your edits
+          are not saved after refresh
+        </p>
+        <div class="rules">
+          <div>
+            <p class="eyebrow">02 / COMPARISON RULES</p>
+            <h2>Make the comparison intentional.</h2>
+            <p class="hint">
+              Objects compare by key. Arrays compare by position unless record
+              matching is enabled.
+            </p>
+          </div>
+          <div class="rule-fields">
+            <label class="check"
+              ><input id="keyed" type="checkbox" /> Match one array by record
+              ID</label
+            >
+            <div class="pair">
+              <div>
+                <label for="array-path">Array JSON Pointer</label
+                ><input
+                  id="array-path"
+                  value="/records"
+                  placeholder="/records"
+                  aria-describedby="match-help"
+                />
+              </div>
+              <div>
+                <label for="id-key">ID field name</label
+                ><input id="id-key" value="id" placeholder="id" />
+              </div>
+            </div>
+            <p id="match-help" class="hint">
+              Use an empty pointer for a root array. IDs must be unique strings
+              or numbers. Reordering is informational.
+            </p>
+            <label for="ignores"
+              >Exclude JSON Pointers
+              <span class="optional">(one per line)</span></label
+            ><textarea
+              id="ignores"
+              rows="2"
+              placeholder="/generatedAt"
+              aria-describedby="ignore-help"
+            ></textarea>
+            <p id="ignore-help" class="hint">
+              Exact paths exclude their subtree. Use ~1 for / and ~0 for ~ in
+              keys. Exclusions cannot overlap an ID-matched array.
+            </p>
+          </div>
+        </div>
+        <div class="compare-bar">
+          <p id="state" role="status">
+            Load the example or enter two fixtures to begin.
+          </p>
+          <button id="compare" class="primary" type="button">
+            Compare fixtures <span aria-hidden="true">↗</span>
+          </button>
+        </div>
+        <p id="error" role="alert" hidden></p>
+      </section>
+      <section class="review" aria-labelledby="review-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">03 / REVIEW</p>
+            <h2 id="review-title">The change ledger</h2>
+          </div>
+          <button id="export" disabled type="button">
+            Download review JSON
+          </button>
+        </div>
+        <div id="summary" class="stats"></div>
+        <p id="notes" class="hint"></p>
+        <div class="filters">
+          <div>
+            <label for="kind">Change type</label
+            ><select id="kind">
+              <option value="all">All changes</option>
+              <option value="added">Added</option>
+              <option value="removed">Removed</option>
+              <option value="type">Type changed</option>
+              <option value="value">Value changed</option>
+            </select>
+          </div>
+          <div>
+            <label for="search">Filter paths</label
+            ><input id="search" type="search" placeholder="e.g. /status" />
+          </div>
+          <p id="count" role="status"></p>
+        </div>
+        <div id="results">
+          <div class="empty">
+            <span aria-hidden="true">{ }</span>
+            <h3>Your next review starts here.</h3>
+            <p>
+              Compare two fixtures to see additions, removals, type changes, and
+              value changes.
+            </p>
+          </div>
+        </div>
+        <p class="hint">
+          Reports contain changed primitive values and container sizes, not full
+          added or removed objects. Treat downloads as data. This is a review
+          aid, not a compatibility verdict or patch.
+        </p>
+      </section>
+    </main>
+    <footer>
+      <strong>Payload Ledger</strong
+      ><span>Independent, MIT-licensed software · v0.1.0</span
+      ><span>Local processing · no app telemetry</span>
+    </footer>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
