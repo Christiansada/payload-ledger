@@ -2,7 +2,7 @@
 
 A browser-local JSON fixture review tool for API developers and testers who need to distinguish meaningful field changes from reordered records and volatile metadata.
 
-**Release status:** v0.1.0 source is published at [Christiansada/payload-ledger](https://github.com/Christiansada/payload-ledger). A private [Sites deployment](https://payload-ledger.christiansada787.chatgpt.site) passed authenticated functional checks; it requires sign-in. Public static hosting is being configured.
+**Try it:** [Live app](https://christiansada.github.io/payload-ledger/) · [MIT source](https://github.com/Christiansada/payload-ledger). The public deployment has been checked with the synthetic example, ID matching, filtering, local file import and an actual JSON review download.
 
 ## Purpose and capabilities
 
